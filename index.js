@@ -1,8 +1,11 @@
+const dotenv = require('dotenv');
 const express = require("express");
 const connectDB = require("./config/db");
-const dotenv = require("dotenv");
+const morgan = require("morgan");
+const cors = require("cors");
+const userRoute = require("./routes/user");
+const quizRoute = require("./routes/quiz");
 const app = express();
-
 dotenv.config();
 connectDB();
 
@@ -10,7 +13,15 @@ app.get("/",(req,res)=>{
     res.send("Hello World");
 });
 
-PORT = 8000
-app.listen(8000,(req,res)=>{
+app.use(cors());
+app.use(morgan('dev'));
+app.use(express.json());
+
+//routes
+app.use('/api/v1/auth',userRoute);
+app.use('/api/v1/quiz',quizRoute);
+
+PORT = 8080
+app.listen(8080,(req,res)=>{
     console.log(`Server is running on port ${PORT}`);
 })

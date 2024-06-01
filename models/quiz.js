@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 const quizSchema = new mongoose.Schema(
   {
-    name: {
+    quizName: {
       type: String,
       required: true,
+      trim: true,
     },
-    type: {
+    quizType: {
       type: Number,
       enum: [1, 2], // Q&A type and Poll type
       required: true,
@@ -15,35 +16,53 @@ const quizSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    optionType: {
+      type: Number,
+      enum: [1, 2, 3], //text,img,text&image
+      required: true,
+    },
     questions: [
       {
-        question: {
+        questionName: {
           type: String,
           required: true,
+          trim: true,
         },
-        optionType:{
-            type: Number,
-            enum: [1, 2, 3], //text,img,text&image
-            required: true,
+        options: [
+          {
+            text: { type: String, trim: true },
+            imgUrl: { type: String, trim: true },
+            votes: { type: Number, default: 0 },
+          },
+        ],
+        attempted: {
+          type: Number,
+          default: 0,
         },
-        options:[{ option: String, votes: { type: Number, default: 0 } }],
-        attempted:{
-            type:Number,
-            default:0
+        correctCount: {
+          type: Number,
+          default: 0,
         },
-        correctCount:{
-            type:Number,
+        correctAns: {
+          type: Number,
+          default: -1,
         },
-        correctAns:{
-            type:String,
+        timer: {
+          type: Number,
+          enum: [0, 1, 2], // 0-> off 1->5sec 2->10sec
+          default: 0,
         },
-        timer:{
-            type:Number,
-        }
       },
     ],
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
+
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
 
-module.exports = mongoose.model("quiz", quizSchema);
+module.exports = mongoose.model("Quiz", quizSchema);
