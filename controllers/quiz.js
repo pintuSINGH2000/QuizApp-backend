@@ -18,6 +18,7 @@ const createQuizController = async (req, res) => {
       .status(201)
       .send({ quiz: quiz._id, message: "Quiz created Successfully" });
   } catch (error) {
+    console.log(error);
     return res.status(500).send({ errorMessage: "Internal server error" });
   }
 };
@@ -180,7 +181,7 @@ const deleteQuizController = async (req, res) => {
     if (!deletedQuiz) {
       return res.status(404).send({ errorMessage: "Bad Request" });
     }
-    return res.status(200).send({ message: "Quiz deleted Successfully" });
+    return res.status(200).send({ deleted:true,message: "Quiz deleted Successfully" });
   } catch (error) {
     return res.status(500).json({ errorMessage: "Internal Server Error" });
   }
@@ -198,10 +199,10 @@ const getQuestionAnalysis = async (req, res) => {
   }
 };
 
-const getQestions = async (req, res) => {
+const getQuestions = async (req, res) => {
   try {
     const quizId = req.params.id;
-    const result = await Quiz.findById(quizId, { questions: 1 });
+    const result = await Quiz.findById(quizId, { questions: 1,optionType:1 });
     return res.status(200).send(result);
   } catch (error) {
     return res.status(500).json({ errorMessage: "Internal Server Error" });
@@ -216,5 +217,5 @@ module.exports = {
   getAllQuizController,
   deleteQuizController,
   getQuestionAnalysis,
-  getQestions,
+  getQuestions,
 };

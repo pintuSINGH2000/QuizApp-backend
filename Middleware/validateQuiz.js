@@ -32,7 +32,7 @@ const validateQuestion = (req, res, next) => {
       const question = questions[qIndex];
 
       // Validate questionName
-      if (!question.questionName || question.trim().length==0) {
+      if (!question.questionName || question.questionName.trim().length==0) {
         return res.status(400).send({ errorMessage: "Bad request" });
       }
 
@@ -98,6 +98,7 @@ const validateQuestion = (req, res, next) => {
     }
     next();
   } catch (error) {
+    console.log(error);
     return res.status(500).send({ errorMessage: "Internal server error" });
   }
 };
